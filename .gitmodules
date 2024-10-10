@@ -1,3 +1,6 @@
 [submodule "customWarning"]
 	path = customWarning
 	url = git@github.com:lvbealr/customWarning.git
+[submodule "Stack"]
+	path = Stack
+	url = git@github.com:lvbealr/Stack.git
