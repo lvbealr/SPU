@@ -77,72 +77,65 @@ int main() {
 
     while (fscanf(in, "%s", word) != EOF) {
         if (strcmp(word, "push") == 0) {
-            CODE.data[ip++] = CMD_PUSH;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_PUSH);
             continue;
         }
 
         if (strcmp(word, "pop") == 0) {
-            CODE.data[ip++] = CMD_POP;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_POP);
             continue;
         }
 
         if (strcmp(word, "add") == 0) {
-            CODE.data[ip++] = CMD_ADD;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_ADD);
             continue;
         }
 
         if (strcmp(word, "sub") == 0) {
-            CODE.data[ip++] = CMD_SUB;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_SUB);
             continue;
         }
 
         if (strcmp(word, "mul") == 0) {
-            CODE.data[ip++] = CMD_MUL;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_MUL);
             continue;
         }
 
         if (strcmp(word, "div") == 0) {
-            CODE.data[ip++] = CMD_DIV;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_DIV);
             continue;
         }
 
         if (strcmp(word, "in") == 0) {
-            CODE.data[ip++] = CMD_IN;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_IN);
             continue;
         }
 
         if (strcmp(word, "out") == 0) {
-            CODE.data[ip++] = CMD_OUT;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_OUT);
             continue;
         }
 
         if (strcmp(word, "dmp") == 0) {
-            CODE.data[ip++] = CMD_DMP;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_DMP);
             continue;
         }
 
         if (strcmp(word, "hlt") == 0) {
-            CODE.data[ip++] = CMD_HLT;
-            CODE.size++;
+            codeArrayPush(&CODE, CMD_HLT);
             continue;
         }
 
-        CODE.data[ip++]     = atoi(word); // TODO myTypeConversion or ???
-        CODE.size++;
+        codeArrayPush(&CODE, atoi(word));
     }   
 
     fclose(in);
 
+    size_t sizeValueType = sizeof(valueType);
+
     FILE *out = fopen("SPU_code.bin", "wb");
+    fwrite(&CODE.size, sizeof(size_t), 1, out);
+    fwrite(&sizeValueType, sizeof(size_t), 1, out);
     fwrite(CODE.data, sizeof(valueType), CODE.size, out);
     fclose(out);
 
