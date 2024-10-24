@@ -4,3 +4,6 @@
 [submodule "privateStack"]
 	path = Stack
 	url = git@github.com:lvbealr/Stack.git
+[submodule "colorPrint"]
+	path = colorPrint
+	url = git@github.com:lvbealr/colorPrint.git
