@@ -17,17 +17,17 @@ static       void  run               (int commands[], int argc, char *argv[]);
 static       void  initializeCommands(int commands[], const char *asmFileName);
 static       void  initializeExeFile (int commands[]);
 
-static int  setLabel           (Label *labels, char *command, int ip);
-static void goThroughLabels    (Label LABELS[], int commands[]);
-static void putLabelAddress    (Label LABELS[], int *commands, int *ip, FILE *inCommands);
+static int  setLabel                 (Label *labels, char *command, int ip);
+static void goThroughLabels          (Label LABELS[], int commands[]);
+static void putLabelAddress          (Label LABELS[], int *commands, int *ip, FILE *inCommands);
 
-static int getArg              (const char *inputLine, int commands[], int ip);
-static int getArgSD            (int *commands, char *registerName, int commandType, int argument, int ip);
-static int getArgD             (int *commands, int commandType, int argument, int ip);
-static int getArgS             (int *commands, char *registerName, int commandType, int ip);
-static int setArg              (FILE *inCommands, int *commands, Label *labels, int ip, int type);
-static int setArgPushPop       (FILE *inCommands, int *commands, int ip, int type);
-static int isRegister          (const char *string);
+static int getArg                    (const char *inputLine, int commands[], int ip);
+static int getArgSD                  (int *commands, char *registerName, int commandType, int argument, int ip);
+static int getArgD                   (int *commands, int commandType, int argument, int ip);
+static int getArgS                   (int *commands, char *registerName, int commandType, int ip);
+static int setArg                    (FILE *inCommands, int *commands, Label *labels, int ip, int type);
+static int setArgPushPop             (FILE *inCommands, int *commands, int ip, int type);
+static int isRegister                (const char *string);
 
 
 static const char *parseConsole(int argc, char *argv[]) {
