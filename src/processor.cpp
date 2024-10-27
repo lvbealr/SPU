@@ -27,12 +27,12 @@ static int run() {
     stack *RET_STACK = createPrivateStack();
     initializePrivateStack(RET_STACK, __FILE__, __LINE__, __PRETTY_FUNCTION__);
 
-    Processor PROCESSOR = {.STACK = STACK,
+    Processor PROCESSOR = {.STACK          = STACK,
                            .RETURN_ADDRESS = RET_STACK,
-                           .commands = {},
-                           .RAM = {},
-                           .registers = {},
-                           .ip = 0};
+                           .commands       = {},
+                           .RAM            = {},
+                           .registers      = {},
+                           .ip             = 0};
 
     // TODO OPEN FILE BY CONSOLE
     FILE *fp = fopen("SPU_code.txt", "r");
@@ -41,8 +41,8 @@ static int run() {
     readFile(fp, PROCESSOR.commands);
 
     #define CMD_(name, cmdCode, ...) \
-    case(name): { \
-        __VA_ARGS__ \
+    case(name): {                    \
+        __VA_ARGS__                  \
     }
 
     while (1) {
