@@ -3,8 +3,7 @@
 
 #include <cstdlib>
 
-#include "../Stack/stack.h"
-// TODO include
+#include "stack.h"
 
 const int    REGISTERS_NUMBER = 5;
 const size_t VIDEO_COLUMNS    = 30;
