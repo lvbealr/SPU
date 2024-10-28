@@ -1,0 +1,13 @@
+[] Quadratic Solver In ASM
+[] Processor Dumps
+[] Disasmbumblber
+[] Do Not Differ HIGH and low register in commands (PUSH/push) - assembler
+[] Binary Mode - assembler
+[] Enter in/out files by console and read it
+[] Remove Magic Numbers
+[] Processor/Assembler/Disassembler Errors In ENUM!!!
+[] Fix Double Label Initialization Error
+[] Fix Stack Memory Leaks In Processor By Initialization ???
+[] Do Stack Initialization By Macro In Processor
+[] README
+[] doxygen
