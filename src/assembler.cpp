@@ -2,11 +2,11 @@
 #include <cstring>
 #include <cstdlib>
 
-#include "../colorPrint/colorPrint.h"
-#include "../include/assembler.h"
-#include "../include/cmds.h"
-#include "../include/labels.h"
-#include "../customWarning/customWarning.h"
+#include "colorPrint.h"
+#include "assembler.h"
+#include "cmds.h"
+#include "labels.h"
+#include "customWarning.h"
 
 // TODO COMMANDS REGISTER (PUSH push)
 
@@ -36,7 +36,7 @@ static const char *parseConsole(int argc, char *argv[]) {
     }
 
     else {
-        return "../defaultAsm.asm";
+        return "asmExamples/defaultAsm.asm";
     }
 }
 
@@ -72,7 +72,7 @@ static void initializeCommands(int commands[], const char *asmFileName) {
             break;
         }
 
-        #include "../include/cmd_generator.h"
+        #include "cmd_generator.h"
 
         if (strchr(command, ':') != NULL) {
             setLabel(labels, command, ip);
@@ -96,7 +96,7 @@ static void initializeCommands(int commands[], const char *asmFileName) {
 // TODO BINARY MODE
 // TODO OUTPUT FILE BY CONSOLE
 static void initializeExeFile(int commands[]) {
-    FILE *exeCommands = fopen("./SPU_code.txt", "w");
+    FILE *exeCommands = fopen("build/SPU_code.txt", "w");
     customWarning(exeCommands != NULL, (void) 1);
 
     int ip = 0;

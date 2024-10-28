@@ -3,8 +3,8 @@
 #include <cstdlib>
 #include <cctype>
 
-#include "../include/labels.h"
-#include "../customWarning/customWarning.h"
+#include "labels.h"
+#include "customWarning.h"
 
 static int isNum         (char name[]);
 static int labelIndex    (Label LABELS[], char name[]);

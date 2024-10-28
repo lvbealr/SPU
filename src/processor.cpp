@@ -2,11 +2,11 @@
 #include <cstdlib>
 #include <cmath>
 
-#include "../Stack/stack.h"
-#include "../include/cmds.h"
-#include "../include/processor.h"
-#include "../Stack/privateStack.h"
-#include "../customWarning/customWarning.h"
+#include "stack.h"
+#include "cmds.h"
+#include "processor.h"
+#include "privateStack.h"
+#include "customWarning.h"
 
 static int run     ();
 static int readFile(FILE *fp, int *commands);
@@ -35,7 +35,7 @@ static int run() {
                            .ip             = 0};
 
     // TODO OPEN FILE BY CONSOLE
-    FILE *fp = fopen("SPU_code.txt", "r");
+    FILE *fp = fopen("build/SPU_code.txt", "r");
     customWarning(fp != NULL, 1);
 
     readFile(fp, PROCESSOR.commands);
@@ -53,7 +53,7 @@ static int run() {
         }
 
         switch (maskedCommand) {
-            #include "../include/cmd_generator.h"
+            #include "cmd_generator.h"
         }
     }
 
