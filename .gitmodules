@@ -1,9 +1,6 @@
 [submodule "customWarning"]
 	path = customWarning
 	url = git@github.com:lvbealr/customWarning.git
-[submodule "privateStack"]
-	path = Stack
-	url = git@github.com:lvbealr/Stack.git
 [submodule "colorPrint"]
 	path = colorPrint
 	url = git@github.com:lvbealr/colorPrint.git
