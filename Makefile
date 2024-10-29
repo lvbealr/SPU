@@ -14,9 +14,11 @@ PROCESSOR_TARGET   = processor
 SUBMODULE_SRC      = colorPrint/colorPrint.cpp # TODO
 
 BUILD_DIR    = build/
-SRC_DIR      = src/
+PROC_SRC_DIR = Processor/src/
+ASM_SRC_DIR  = Assembler/src/
+DASM_SRC_DIR = Disassembler/src/
 STACK_DIR    = Stack/
-CFLAGS       = -I include/ -I customWarning/ -I colorPrint/ -I Stack/
+CFLAGS       = -I customWarning/ -I colorPrint/ -I Stack/ -I Assembler/include/ -I Processor/include/ -I Disassembler/include/
 
 DEFAULT_ASM_SRC      = asmExamples/
 DEFAULT_ASM_FILE     = defaultAsm.asm
@@ -48,7 +50,7 @@ DED_FLAGS    = -D _DEBUG -ggdb2 -std=c++17 -O0 -Wall -Wextra -Weffc++           
 				       -Wlarger-than=8192 -Wstack-usage=8192 -pie -fPIE -Werror=vla
 
 vpath %.o   $(BUILD_DIR)
-vpath %.cpp $(SRC_DIR)
+vpath %.cpp $(PROC_SRC_DIR) $(ASM_SRC_DIR) $(DASM_SRC_DIR)
 
 .PHONY: clean all
 all:
@@ -68,19 +70,19 @@ $(BUILD_DIR):
 $(OBJECT): %.o : %.cpp
 	$(CXX) $(CFLAGS) -c $^ -o $(addprefix $(BUILD_DIR), $@)
 
-quickAssembler: $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
+quickAssembler: $(addprefix $(ASM_SRC_DIR), $(ASSEMBLY_SRC))
 	clear
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
 	$(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET)) $(DEFAULT_ASM_SRC)$(DEFAULT_ASM_FILE)
 
-quickProcessor: $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
+quickProcessor: $(addprefix $(PROC_SRC_DIR), $(PROCESSOR_SRC))
 	clear
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR), $(STACK_SRC)) \
 	-o $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
-assembler: $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
+assembler: $(addprefix $(ASM_SRC_DIR), $(ASSEMBLY_SRC))
 	clear
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
@@ -89,7 +91,7 @@ assembler: $(addprefix $(SRC_DIR), $(ASSEMBLY_SRC))
 	@printf "For example $(YELLOW_TEXT) build/assembler asmExamples/factorial.asm $(DEFAULT_TEXT)\n"
 	@printf "Do not type any flags to start assembly with default settings\n"
 
-disassembler: $(addprefix $(SRC_DIR), $(DISASSEMBLY_SRC))
+disassembler: $(addprefix $(DASM_SRC_DIR), $(DISASSEMBLY_SRC))
 	clear
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
@@ -97,7 +99,7 @@ disassembler: $(addprefix $(SRC_DIR), $(DISASSEMBLY_SRC))
 	@printf "To run a disassemble, write:$(GREEN_TEXT) $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET)) [--input / --output] [file PATH] $(DEFAULT_TEXT)\n"
 	@printf "Do not type any flags to start processor with default settings\n"
 
-processor: $(addprefix $(SRC_DIR), $(PROCESSOR_SRC))
+processor: $(addprefix $(PROC_SRC_DIR), $(PROCESSOR_SRC))
 	clear
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR), $(STACK_SRC)) \
