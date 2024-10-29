@@ -4,3 +4,6 @@
 [submodule "colorPrint"]
 	path = colorPrint
 	url = git@github.com:lvbealr/colorPrint.git
+[submodule "Stack"]
+	path = Stack
+	url = git@github.com:lvbealr/Stack.git
