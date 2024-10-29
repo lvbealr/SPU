@@ -30,9 +30,11 @@ TARGET       = SPU
 OBJECT       = $(patsubst %.cpp, %.o, $(SRC))
 BUILD_OBJ    = $(addprefix $(BUILD_DIR), $(OBJECT))
 
-GREEN_TEXT   = \033[1;32m
-YELLOW_TEXT  = \033[1;33m
-DEFAULT_TEXT = \033[0m
+GREEN_TEXT   			= \033[1;32m
+YELLOW_TEXT  			= \033[1;33m
+CYAN_TEXT         = \033[1;36m
+DEFAULT_BOLD_TEXT = \033[1;37m
+DEFAULT_TEXT 			= \033[0m
 
 DED_FLAGS    = -D _DEBUG -ggdb2 -std=c++17 -O0 -Wall -Wextra -Weffc++                                     \
 			    	   -Waggressive-loop-optimizations -Wc++14-compat -Wmissing-declarations                      \
@@ -52,12 +54,18 @@ DED_FLAGS    = -D _DEBUG -ggdb2 -std=c++17 -O0 -Wall -Wextra -Weffc++           
 vpath %.o   $(BUILD_DIR)
 vpath %.cpp $(PROC_SRC_DIR) $(ASM_SRC_DIR) $(DASM_SRC_DIR)
 
-.PHONY: clean all
+.PHONY: all
+
 all:
+	make clean
 	clear
 	make quickAssembler
 	make quickProcessor
-	@printf "$(GREEN_TEXT)$(TARGET) COMPILED $(DEFAULT_TEXT)\n"
+	clear
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
+	@printf "$(CYAN_TEXT)$(TARGET)$(GREEN_TEXT) COMPILED. $(DEFAULT_BOLD_TEXT)RUNNING...\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
+	@printf "$(DEFAULT_TEXT)"
 	@$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
 
 $(TARGET): $(BUILD_DIR) $(OBJECT)
@@ -74,22 +82,34 @@ quickAssembler: $(addprefix $(ASM_SRC_DIR), $(ASSEMBLY_SRC))
 	clear
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
-	$(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET)) $(DEFAULT_ASM_SRC)$(DEFAULT_ASM_FILE)
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
+	@printf "$(CYAN_TEXT)ASSEMBLER $(GREEN_TEXT)COMPILED. $(DEFAULT_BOLD_TEXT)TO RUN AN $(CYAN_TEXT)ASSEMBLER, $(DEFAULT_BOLD_TEXT)WRITE: $(GREEN_TEXT)build/assembler [file-PATH]\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+	@printf "$(DEFAULT_TEXT)\n"
+	@printf "$(CYAN_TEXT)♦ HINT: $(DEFAULT_TEXT)do not type path to .asm file to assembly $(DEFAULT_EXE_SRC)$(DEFAULT_EXE_FILE)\n"
+	@$(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
+
 
 quickProcessor: $(addprefix $(PROC_SRC_DIR), $(PROCESSOR_SRC))
 	clear
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR), $(STACK_SRC)) \
 	-o $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
+	@printf "$(CYAN_TEXT)PROCESSOR $(GREEN_TEXT)COMPILED. $(DEFAULT_BOLD_TEXT)TO RUN A $(CYAN_TEXT)PROCESSOR, $(DEFAULT_BOLD_TEXT)WRITE: $(GREEN_TEXT)build/processor [file-PATH]\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
+	@printf "$(DEFAULT_TEXT)\n"
+	@printf "$(CYAN_TEXT)♦ HINT: $(DEFAULT_TEXT)do not type path to .bin file to run $(DEFAULT_EXT_SRC)$(DEFAULT_EXE_FILE)\n"
 
 assembler: $(addprefix $(ASM_SRC_DIR), $(ASSEMBLY_SRC))
 	clear
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
-	@printf "$(GREEN_TEXT)$(ASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
-	@printf "To run an assembler, write:$(GREEN_TEXT) $(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET)) [file PATH] $(DEFAULT_TEXT)\n"
-	@printf "For example $(YELLOW_TEXT) build/assembler asmExamples/factorial.asm $(DEFAULT_TEXT)\n"
-	@printf "Do not type any flags to start assembly with default settings\n"
+	@printf "\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
+	@printf "ASSEMBLER COMPILED. $(DEFAULT_BOLD_TEXT)TO RUN AN ASSEMBLER, WRITE: $(GREEN_TEXT)build/assembler [file-PATH] $(YELLOW_TEXT)(build/assembler asmExamples/factorial.asm)\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n$(DEFAULT_TEXT)"
+	@printf "$(CYAN_TEXT)♦ HINT: $(DEFAULT_TEXT)do not type any flags to start assembly with default settings\n"
 
 disassembler: $(addprefix $(DASM_SRC_DIR), $(DISASSEMBLY_SRC))
 	clear
@@ -104,10 +124,16 @@ processor: $(addprefix $(PROC_SRC_DIR), $(PROCESSOR_SRC))
 	make $(BUILD_DIR)
 	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(STACK_DIR), $(STACK_SRC)) \
 	-o $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
-	@printf "$(GREEN_TEXT)$(PROCESSOR_TARGET) COMPILED$(DEFAULT_TEXT)\n"
-	@printf "To run a processor, write:$(GREEN_TEXT) $(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET)) [file PATH] $(DEFAULT_TEXT)\n"
-	@printf "For example $(YELLOW_TEXT) build/processor build/SPU_code.txt $(DEFAULT_TEXT)\n"
-	@printf "Do not type any flags to start processor with default settings\n"
+	@printf "\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
+	@printf "PROCESSOR COMPILED. $(DEFAULT_BOLD_TEXT)TO RUN A PROCESSOR, WRITE: $(GREEN_TEXT)build/processor [file-PATH] $(YELLOW_TEXT)(build/processor txtExamples/SPU_code.txt)\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n$(DEFAULT_TEXT)"
+	@printf "$(CYAN_TEXT)♦ HINT: $(DEFAULT_TEXT)do not type any flags to start assembly with default settings\n"
 
 doxy:
 	doxygen
+
+clean:
+	@printf "$(GREEN_TEXT)► $(CYAN_TEXT)build/ $(DEFAULT_BOLD_TEXT)and $(CYAN_TEXT)dumps/ $(DEFAULT_BOLD_TEXT)were removed!\n"
+	@rm -rf build
+	@rm -rf dumps
