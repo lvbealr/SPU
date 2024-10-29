@@ -63,7 +63,7 @@ all:
 	make quickProcessor
 	clear
 	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
-	@printf "$(CYAN_TEXT)$(TARGET)$(GREEN_TEXT) COMPILED. $(DEFAULT_BOLD_TEXT)RUNNING...\n"
+	@printf "$(CYAN_TEXT)$(TARGET)$(GREEN_TEXT) COMPILED. $(DEFAULT_BOLD_TEXT)RUNNING... ($(DEFAULT_ASM_FILE))\n"
 	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
 	@printf "$(DEFAULT_TEXT)"
 	@$(addprefix $(BUILD_DIR), $(PROCESSOR_TARGET))
@@ -87,7 +87,7 @@ quickAssembler: $(addprefix $(ASM_SRC_DIR), $(ASSEMBLY_SRC))
 	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░"
 	@printf "$(DEFAULT_TEXT)\n"
 	@printf "$(CYAN_TEXT)♦ HINT: $(DEFAULT_TEXT)do not type path to .asm file to assembly $(DEFAULT_EXE_SRC)$(DEFAULT_EXE_FILE)\n"
-	@$(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET))
+	@$(addprefix $(BUILD_DIR), $(ASSEMBLY_TARGET)) $(DEFAULT_ASM_SRC)$(DEFAULT_ASM_FILE)
 
 
 quickProcessor: $(addprefix $(PROC_SRC_DIR), $(PROCESSOR_SRC))
