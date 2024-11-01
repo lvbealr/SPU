@@ -30,7 +30,10 @@ int findLabelAddress(Label LABELS[], char name[], int ip) {
   customWarning(name   != NULL, 1);
 
   char *ptrToCall = strchr(name, ':');
-  (*ptrToCall)    = '\0';
+
+  if (ptrToCall != NULL) {
+    (*ptrToCall)    = '\0';
+  }
 
   if (isNum(name)) {
     int address = 0;
