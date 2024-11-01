@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <cctype>
 #include <cstdlib>
 
 #include "colorPrint.h"
@@ -12,6 +13,7 @@
 
 typedef int valueType; // TODO NOT USED
 
+static       int   customStrcmp      (char *firstString, char *secondString);
 static const char *parseConsole      (int argc, char *argv[]);
 static       void  run               (int commands[], int argc, char *argv[]);
 static       void  initializeCommands(int commands[], const char *asmFileName);
@@ -29,6 +31,46 @@ static       int   setArg            (FILE *inCommands, int *commands, Label *la
 static       int   setArgPushPop     (FILE *inCommands, int *commands, int ip, int type);
 static       int   isRegister        (const char *string);
 
+static int customStrcmp(char *firstString, char *secondString) {
+    customWarning(firstString  != NULL, 1);
+    customWarning(secondString != NULL, 1);
+
+    size_t firstLen = strlen(firstString), secondLen = strlen(secondString);
+    size_t firstIndex   = 0, secondIndex   = 0;
+    int    firstElement = 0, secondElement = 0;
+
+    int asciiDiff = 0;
+
+    while (asciiDiff == 0 && firstIndex < firstLen && secondIndex < secondLen) {
+        firstElement  = firstString[firstIndex];
+        secondElement = secondString[secondIndex];
+
+        if (firstElement == '\n' || firstElement == EOF) {
+            return (secondElement == '\n' || secondElement == EOF) ? 0 : -1;
+        }
+
+        if (secondElement == '\n' || secondElement == EOF) {
+            return 1;
+        }
+
+        if (isalpha(firstElement) || firstElement == ' ' || firstElement == '\'') {
+            if (isalpha(secondElement) || secondElement == ' ' || secondElement == '\'') {
+                asciiDiff += tolower(firstElement) - tolower(secondElement);
+                firstIndex++; secondIndex++;
+            }
+
+            else {
+                secondIndex++;
+            }
+        }
+
+        else {
+            firstIndex++;
+        }
+    }
+
+    return asciiDiff;
+}
 
 static const char *parseConsole(int argc, char *argv[]) {
     if (argc > 1) {
@@ -62,7 +104,7 @@ static void initializeCommands(int commands[], const char *asmFileName) {
     labelsInitialize(labels);
 
     #define CMD_(name, cmdCode, ...)                                 \
-        if (strcmp(command, #name) == 0) {                           \
+        if (customStrcmp(command, #name) == 0) {                     \
             ip = setArg(inCommands, commands, labels, ip, name);     \
             continue;                                                \
         }
