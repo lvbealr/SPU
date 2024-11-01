@@ -18,7 +18,7 @@ PROC_SRC_DIR = Processor/src/
 ASM_SRC_DIR  = Assembler/src/
 DASM_SRC_DIR = Disassembler/src/
 STACK_DIR    = Stack/
-CFLAGS       = -I customWarning/ -I colorPrint/ -I Stack/ -I Assembler/include/ -I Processor/include/ -I Disassembler/include/
+CFLAGS       = -I customWarning/ -I colorPrint/ -I Stack/ -I Assembler/include/ -I Processor/include/ -I Disassembler/include/ -I common
 
 DEFAULT_ASM_SRC      = asmExamples/
 DEFAULT_ASM_FILE     = defaultAsm.asm
