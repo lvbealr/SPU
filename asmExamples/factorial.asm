@@ -1,14 +1,14 @@
 IN
 POP AX
 
-CALL FACT:
+CALL fact
 
 PUSH BX
 OUT
 
 HLT
 
-FACT:
+fact:
     PUSH AX
     PUSH 1
     JNE NEXT:
@@ -24,7 +24,7 @@ FACT:
     SUB
     POP AX
 
-    CALL FACT:
+    CALL fact
 
     PUSH BX
     MUL
