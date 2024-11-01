@@ -35,21 +35,41 @@ static int customStrcmp(char *firstString, char *secondString) {
     customWarning(firstString  != NULL, 1);
     customWarning(secondString != NULL, 1);
 
-    size_t firstLen = strlen(firstString), secondLen = strlen(secondString);
+    size_t firstLen     = strlen(firstString),
+           secondLen    = strlen(secondString);
+
+    char *firstStr  = (char *)calloc(firstLen,  sizeof(char));
+    char *secondStr = (char *)calloc(secondLen, sizeof(char));
+
+    strcpy(firstStr,  firstString);
+    strcpy(secondStr, secondString);
+
+    *(firstStr  + firstLen)  = EOF;
+    *(secondStr + secondLen) = EOF;
+
     size_t firstIndex   = 0, secondIndex   = 0;
     int    firstElement = 0, secondElement = 0;
 
     int asciiDiff = 0;
 
-    while (asciiDiff == 0 && firstIndex < firstLen && secondIndex < secondLen) {
-        firstElement  = firstString[firstIndex];
-        secondElement = secondString[secondIndex];
+    #define FREE_() {     \
+        free(firstStr);   \
+        free(secondStr);  \
+        firstStr  = NULL; \
+        secondStr = NULL; \
+    }
+
+    while (asciiDiff == 0) {
+        firstElement  = firstStr[firstIndex];
+        secondElement = secondStr[secondIndex];
 
         if (firstElement == '\n' || firstElement == EOF) {
+            FREE_();
             return (secondElement == '\n' || secondElement == EOF) ? 0 : -1;
         }
 
         if (secondElement == '\n' || secondElement == EOF) {
+            FREE_();
             return 1;
         }
 
@@ -68,6 +88,10 @@ static int customStrcmp(char *firstString, char *secondString) {
             firstIndex++;
         }
     }
+
+    FREE_();
+
+    #undef FREE_()
 
     return asciiDiff;
 }
@@ -112,8 +136,7 @@ static void initializeCommands(int commands[], const char *asmFileName) {
     while (1) {
         if (fscanf(inCommands, "%s", command) == EOF) {
             break;
-        }
-
+        } // TODO DO NOT EAT COMMENTS IN .ASM
         #include "cmd_generator.h"
 
         if (strchr(command, ':') != NULL) {
@@ -178,12 +201,12 @@ static void putLabelAddress(Label LABELS[], int *commands, int *ip, FILE *inComm
 }
 
 static int isRegister(const char *string) {
-    if ((strcmp(string, "AX")) == 0 ||
-        (strcmp(string, "BX")) == 0 ||
-        (strcmp(string, "CX")) == 0 ||
-        (strcmp(string, "DX")) == 0 ||
-        (strcmp(string, "EX")) == 0 ||
-        (strcmp(string, "FX")) == 0) {
+    if ((customStrcmp((char *)string, "AX")) == 0 ||
+        (customStrcmp((char *)string, "BX")) == 0 ||
+        (customStrcmp((char *)string, "CX")) == 0 ||
+        (customStrcmp((char *)string, "DX")) == 0 ||
+        (customStrcmp((char *)string, "EX")) == 0 ||
+        (customStrcmp((char *)string, "FX")) == 0) {
             return 1;
         }
 
