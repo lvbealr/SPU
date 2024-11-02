@@ -18,7 +18,7 @@ struct Label {
 enum LabelErrors { // TODO NUMBERING
   EXCEEDED_MAX_LABEL_COUNT = -1,
   DOUBLE_INITIALIZE        =  0,
-  NO_ERROR                 =  1
+  NO_LABEL_ERROR           =  1
 };
 
 // FUNCTION PROTOTYPES //
