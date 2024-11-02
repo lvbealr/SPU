@@ -7,3 +7,6 @@
 [submodule "Stack"]
 	path = Stack
 	url = git@github.com:lvbealr/Stack.git
+[submodule "myOnegin"]
+	path = myOnegin
+	url = git@github.com:lvbealr/myOnegin.git

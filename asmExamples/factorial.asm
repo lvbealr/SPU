@@ -1,4 +1,4 @@
-IN
+IN ; comment
 POP AX
 
 CALL fact
