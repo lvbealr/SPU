@@ -6,7 +6,7 @@
 #include "labels.h"
 #include "customWarning.h"
 
-static int isNum         (char name[]);
+static int isNum         (char  name[]);
 static int labelIndex    (Label LABELS[], char name[]);
 static int resizeLabelJmp(Label LABELS[], int labelInd);
 
@@ -22,7 +22,7 @@ int labelsInitialize(Label LABELS[]) {
     LABELS[index].jmpUsed       = 0;
   }
 
-  return 0; // TODO ENUM
+  return NO_LABEL_ERROR;
 }
 
 int findLabelAddress(Label LABELS[], char name[], int ip) {
@@ -43,11 +43,13 @@ int findLabelAddress(Label LABELS[], char name[], int ip) {
   }
 
   int labelInd = labelIndex(LABELS, name);
+
   if (labelInd == EXCEEDED_MAX_LABEL_COUNT) {
     return EXCEEDED_MAX_LABEL_COUNT;
   }
 
   resizeLabelJmp(LABELS, labelInd);
+
   LABELS[labelInd].jmpAddress[LABELS[labelInd].jmpUsed] = ip;
   LABELS[labelInd].jmpUsed++;
 
@@ -62,6 +64,7 @@ int initializeLabelAddress(Label LABELS[], char name[], int ip) {
   (*ptrToCall)    = '\0';
 
   int labelInd = labelIndex(LABELS, name);
+
   if (labelInd == EXCEEDED_MAX_LABEL_COUNT) {
     return EXCEEDED_MAX_LABEL_COUNT;
   }
@@ -72,7 +75,7 @@ int initializeLabelAddress(Label LABELS[], char name[], int ip) {
 
   LABELS[labelInd].initAddress = ip;
 
-  return 0; // TODO ENUM
+  return NO_LABEL_ERROR;
 }
 
 int labelsDestruct(Label LABELS[]) {
@@ -86,7 +89,7 @@ int labelsDestruct(Label LABELS[]) {
     LABELS[index].jmpAddress = NULL;
   }
 
-  return 0; // TODO ENUM
+  return NO_LABEL_ERROR;
 }
 
 static int isNum(char name[]) {
@@ -138,5 +141,5 @@ static int resizeLabelJmp(Label LABELS[], int labelIndex) {
     LABELS[labelIndex].jmpAddress = (int *)realloc(LABELS[labelIndex].jmpAddress, (size_t)newSize);
   }
 
-  return 0; // TODO ENUM
+  return NO_LABEL_ERROR;
 }
