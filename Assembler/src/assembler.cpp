@@ -9,7 +9,46 @@
 #include "labels.h"
 #include "customWarning.h"
 
-// TODO COMMANDS REGISTER (PUSH push)
+// TODO ITS DEBUG MACRO AND CONSTANT
+// TODO ON_DEBUG
+static const size_t MAX_TRASH_BUFFER_SIZE = 100;
+
+#define CLEAN_INPUT_LINE(stream) {               \
+    char trash[MAX_TRASH_BUFFER_SIZE] = {};      \
+    printf("Clean Buffer...\n");                 \
+    fscanf(stream, "%[^\r\n]%*1[\r\n]", trash);  \
+    printf("Trash: [%s]\n", trash);              \
+    *trash = {};                                 \
+}
+
+#define CREATE_CLEAR_COMMAND(dest, src) {      \
+    char *ptrToSymbol = strchr(src, ';');      \
+                                               \
+    if (ptrToSymbol) {                         \
+        strncpy(dest, src, ptrToSymbol - src); \
+    }                                          \
+                                               \
+    else {                                     \
+        strcpy(dest, src);                     \
+    }                                          \
+}
+
+// TODO ОЧЕНЬ ПЛОХО
+#define CHECK_IF_COMMANDS_USE_FSTREAM() {        \
+    if (customStrcmp(command, "PUSH") &&         \
+        customStrcmp(command, "POP" ) &&         \
+        customStrcmp(command, "CALL") &&         \
+        customStrcmp(command, "JA"  ) &&         \
+        customStrcmp(command, "JAE" ) &&         \
+        customStrcmp(command, "JB"  ) &&         \
+        customStrcmp(command, "JBE" ) &&         \
+        customStrcmp(command, "JE"  ) &&         \
+        customStrcmp(command, "JNE" ) &&         \
+        customStrcmp(command, "JMP" )) {         \
+                                                 \
+        CLEAN_INPUT_LINE(inCommands);            \
+    }                                            \
+}
 
 typedef int valueType; // TODO NOT USED
 
@@ -121,25 +160,47 @@ static void initializeCommands(int commands[], const char *asmFileName) {
     FILE *inCommands = fopen(asmFileName, "r");
     customWarning(inCommands != NULL, (void) 1);
 
-    char command[MAX_CMD_SIZE] = {};
-    int ip                     = 0;
+    char command   [MAX_CMD_SIZE]  = {};
+    int ip                         = 0;
 
     Label labels[MAX_LABEL_COUNT] = {};
     labelsInitialize(labels);
 
     #define CMD_(name, cmdCode, ...)                                 \
-        if (customStrcmp(command, #name) == 0) {                     \
+        if (customStrcmp(newCommand, #name) == 0) {                  \
             ip = setArg(inCommands, commands, labels, ip, name);     \
             continue;                                                \
         }
 
     while (1) {
+        printf("===========================================\n"); // ! DEBUG
+
+        char newCommand [MAX_CMD_SIZE] = {};
+
         if (fscanf(inCommands, "%s", command) == EOF) {
             break;
-        } // TODO DO NOT EAT COMMENTS IN .ASM
+        }
+
+        printf("Read Command: [%s]\n", command);
+
+        if (!isalpha(*command)) {
+            printf("Command Doesn't Start With A Letter!\n"); // ! DEBUG
+
+            CLEAN_INPUT_LINE(inCommands);
+
+            continue;
+        }
+
+        CHECK_IF_COMMANDS_USE_FSTREAM();
+
+        CREATE_CLEAR_COMMAND(newCommand, command);
+
+        printf("New Command After Delete ';': [%s]\n", newCommand); // ! DEBUG
+
         #include "cmd_generator.h"
 
-        if (strchr(command, ':') != NULL) {
+        if (strchr(newCommand, ':') != NULL) {
+            printf("<CALL> Label: [%s]\n", newCommand); // ! DEBUG
             setLabel(labels, command, ip);
             continue;
         }
@@ -192,10 +253,19 @@ static void goThroughLabels(Label LABELS[], int commands[]) {
 }
 
 static void putLabelAddress(Label LABELS[], int *commands, int *ip, FILE *inCommands) {
-    char labelName[MAX_LABEL_NAME_SIZE] = {};
+    char labelName   [MAX_LABEL_NAME_SIZE] = {};
+    char newLabelName[MAX_LABEL_NAME_SIZE] = {};
 
     fscanf(inCommands, "%s", labelName);
-    int labelAddress  = findLabelAddress(LABELS, labelName, *ip);
+    printf("Read Label (putLabelAddress): [%s]\n", labelName);    // ! DEBUG
+
+    CREATE_CLEAR_COMMAND(newLabelName, labelName);
+
+    printf("New Label After Delete Trash: [%s]\n", newLabelName); // ! DEBUG
+
+    int labelAddress  = findLabelAddress(LABELS, newLabelName, *ip);
+
+    CLEAN_INPUT_LINE(inCommands);
 
     commands[(*ip)++] = labelAddress;
 }
@@ -225,15 +295,25 @@ static int getArg(const char *inputLine, int commands[], int ip) {
 
     if (sscanf(inputLine, "%s + %d", registerName, &arg) == 2 ||
         sscanf(inputLine, "%d + %s", &arg, registerName) == 2) {
+            printf("Argument Is [<REG> + <DIGIT>]: [%s + %d]\n", registerName, arg); // TODO FIX [%d + %s]
+
             return getArgSD(commands, registerName, commandType, arg, ip);
         }
 
     if (sscanf(inputLine, "%d", &arg) == 1) {
+        printf("Argument Is Digit (getArg): [%d]\n", arg);
         return getArgD(commands, commandType, arg, ip);
     }
 
     if (sscanf(inputLine, "%s", registerName) == 1) {
-        return getArgS(commands, registerName, commandType, ip);
+        printf("Argument Is Register (getArg): [%s]\n", registerName);
+
+        char newRegisterName[MAX_REGISTER_SIZE] = {};
+
+        CREATE_CLEAR_COMMAND(newRegisterName, registerName);
+
+        printf("New Register After Delete Trash: [%s]\n", newRegisterName);
+        return getArgS(commands, newRegisterName, commandType, ip);
     }
 
     return ip;
@@ -264,12 +344,16 @@ static int setLabel(Label *labels, char *command, int ip) {
     strcpy(labelName, command);
 
     int err = initializeLabelAddress(labels, labelName, ip);
+
     if (err == EXCEEDED_MAX_LABEL_COUNT) {
         customPrint  (red, bold, bgDefault, "Error: exceeded max label count\n");
         customWarning(NULL != NULL, 1);
     }
 
-    // TODO DOUBLE LABEL INITIALIZE ERROR!
+    if (err == DOUBLE_INITIALIZE) {
+        customPrint  (red, bold, bgDefault, "Error: double label initialization\n");
+        customWarning(NULL != NULL, 1);
+    }
 
     return 0;
 }
@@ -314,7 +398,7 @@ static int getArgS(int *commands, char *registerName, int commandType, int ip) {
 }
 
 static int setArgPushPop(FILE *inCommands, int *commands, int ip, int type) {
-    int commandIp      = ip;
+    int  commandIp     = ip;
     char inputLine[30] = {}; // TODO MAGIC
 
     fscanf(inCommands, "%[^\n]\n", inputLine);
