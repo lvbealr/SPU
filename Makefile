@@ -11,7 +11,7 @@ ASSEMBLY_TARGET    = assembler
 PROCESSOR_SRC      = processor.cpp
 PROCESSOR_TARGET   = processor
 
-SUBMODULE_SRC      = colorPrint/colorPrint.cpp # TODO
+SUBMODULE_SRC      = colorPrint/colorPrint.cpp
 
 BUILD_DIR    = build/
 PROC_SRC_DIR = Processor/src/
