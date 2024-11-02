@@ -21,16 +21,16 @@ static const size_t MAX_TRASH_BUFFER_SIZE = 100;
     *trash = {};                                 \
 }
 
-#define CREATE_CLEAR_COMMAND(dest, src) {      \
-    char *ptrToSymbol = strchr(src, ';');      \
-                                               \
-    if (ptrToSymbol) {                         \
-        strncpy(dest, src, ptrToSymbol - src); \
-    }                                          \
-                                               \
-    else {                                     \
-        strcpy(dest, src);                     \
-    }                                          \
+#define CREATE_CLEAR_COMMAND(dest, src) {        \
+    char *ptrToSymbol = strchr(src, ';');        \
+                                                 \
+    if (ptrToSymbol) {                           \
+        strncpy(dest, src, ptrToSymbol - src);   \
+    }                                            \
+                                                 \
+    else {                                       \
+        strcpy(dest, src);                       \
+    }                                            \
 }
 
 // TODO ОЧЕНЬ ПЛОХО
