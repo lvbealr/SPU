@@ -74,7 +74,7 @@ FIRST:
 
     PUSH AX
     PUSH 30
-    JNE IF1:
+    JNE FIRST_IF:
 
         PUSH 1
         PUSH BX
@@ -84,7 +84,7 @@ FIRST:
         PUSH 0
         POP AX
 
-    IF1:
+    FIRST_IF:
 
     PUSH BX
     PUSH 30

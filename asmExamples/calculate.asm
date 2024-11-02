@@ -1,6 +1,6 @@
-PUSH 70
-PUSH 130
-ADD
+PUSH 70 ; hui
+PUSH 130 ; huyashka
+ADD ; huika
 PUSH 60
 PUSH 40
 SUB
