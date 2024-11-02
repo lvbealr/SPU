@@ -1,10 +1,10 @@
-in
-in
-in
+in ; input coef_a
+in ; input coef_b
+in ; input coef_c
 
-pop cx
-pop bx
-pop ax
+pop cx ; coef c
+pop bx ; coef b
+pop ax ; coef a
 
 call quadratka
 
