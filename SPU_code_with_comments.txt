@@ -1,0 +1,48 @@
+6   // IN (cmd_generator.h)
+65  // POP = 1 (cmd_generator.h) | REG = 64 (cmds.h) => 65
+1   // [A]X (firstRegisterLetter, assembler.cpp)
+16  // CALL (cmd_generator.h)
+9   // initAddress of "fact" label (putThroughLabels)
+64  // PUSH = 0 (cmd_generator.h) | REG = 64 (cmds.h) => 64
+2   // [B]X (firstRegisterLetter, assembler.cpp)
+7   // OUT = 7 (cmd_generator.h)
+-1  // HLT = -1 (cmd_generator.h)
+
+///////////////////////////////////
+SKIP fact: ????????????????????????
+///////////////////////////////////
+
+64  // PUSH = 0 (cmd_generator.h) | REG = 64 (cmds.h) => 64
+1   // [A]X (firstRegisterLetter, assembler.cpp)
+128 // PUSH = 0 (cmd_generator.h) | IMMED = 128 (cmds.h) => 128
+1   // argument = 1
+14  // JNE = 14 (cmds_generator.h)
+20  // initAddress of "NEXT" label (putThroughLabels)
+128 // PUSH = 0 (cmd_generator.h) | IMMED = 128 (cmds.h) => 128
+1   // argument = 1
+65  // POP = 1 (cmd_generator.h) | REG = 64 (cmds.h) => 64
+2   // [B]X (firstRegisterLetter, assembler.cpp)
+17  // RET = 17 (cmds_generator.h)
+
+///////////////////////////////////
+SKIP NEXT: ????????????????????????
+///////////////////////////////////
+
+64  // PUSH = 0 (cmd_generator.h) | REG = 64 (cmds.h) => 64
+1   // [A]X (firstRegisterLetter, assembler.cpp)
+64  // PUSH = 0 (cmd_generator.h) | REG = 64 (cmds.h) => 64
+1   // [A]X (firstRegisterLetter, assembler.cpp)
+128 // PUSH = 0 (cmd_generator.h) | IMMED = 128 (cmds.h) => 128
+1   // argument = 1
+3   // SUB = 3 (cmd_generator.h)
+65  // POP = 1 (cmd_generator.h) | REG = 64 (cmds.h) => 65
+1   // [A]X (firstRegisterLetter, assembler.cpp)
+16  // CALL (cmd_generator.h)
+9   // initAddress of "fact" label (putThroughLabels)
+64  // PUSH = 0 (cmd_generator.h) | REG = 64 (cmds.h) => 64
+2   // [B]X (firstRegisterLetter, assembler.cpp)
+4   // MUL = 4 (cmd_generator.h)
+65  // POP = 1 (cmd_generator.h) | REG = 64 (cmds.h) => 65
+2   // [B]X (firstRegisterLetter, assembler.cpp)
+17  // RET = 17 (cmd_generator.h)
+-2  // END_OF_COMMANDS = -2 (cmds.h)
