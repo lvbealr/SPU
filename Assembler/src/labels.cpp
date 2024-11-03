@@ -74,7 +74,7 @@ int initializeLabelAddress(Label LABELS[], char name[], int ip) {
   }
 
   LABELS[labelInd].initAddress = ip;
-
+  printf("Set Label Index: %d [%s]\n", LABELS[labelInd].initAddress, name);
   return NO_LABEL_ERROR;
 }
 

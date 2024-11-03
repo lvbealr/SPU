@@ -200,7 +200,7 @@ static void initializeCommands(int commands[], const char *asmFileName) {
         #include "cmd_generator.h"
 
         if (strchr(newCommand, ':') != NULL) {
-            printf("<CALL> Label: [%s]\n", newCommand); // ! DEBUG
+            printf("Label: [%s]\n", newCommand); // ! DEBUG
             setLabel(labels, command, ip);
             continue;
         }
@@ -212,6 +212,7 @@ static void initializeCommands(int commands[], const char *asmFileName) {
     #undef CMD_
 
     commands[ip] = END_OF_COMMANDS;
+    printf("END: [%d]\n", commands[ip]);
 
     fclose(inCommands);
 
@@ -243,6 +244,7 @@ static void goThroughLabels(Label LABELS[], int commands[]) {
     for (int labelIndex = 0; labelIndex < MAX_LABEL_COUNT; labelIndex++) {
         for (int jmpIndex = 0; jmpIndex < LABELS[labelIndex].jmpUsed; jmpIndex++) {
             commands[LABELS[labelIndex].jmpAddress[jmpIndex]] = LABELS[labelIndex].initAddress;
+            printf("Label (goThroughLabels): [%s] || To .txt: [%d]\n", LABELS[labelIndex].labelName, LABELS[labelIndex].initAddress);
 
             if (LABELS[labelIndex].initAddress == -1) {
                 customPrint  (red, bold, bgDefault, "Error: label isn't initialized\n");
@@ -266,8 +268,8 @@ static void putLabelAddress(Label LABELS[], int *commands, int *ip, FILE *inComm
     int labelAddress  = findLabelAddress(LABELS, newLabelName, *ip);
 
     CLEAN_INPUT_LINE(inCommands);
-
     commands[(*ip)++] = labelAddress;
+    printf("Label (putLabelAddress): [%s], to .txt: [%d]\n", labelName, commands[(*ip)-1]);
 }
 
 static int isRegister(const char *string) {
@@ -326,6 +328,7 @@ static int setArg(FILE *inCommands, int *commands, Label *labels, int ip, int ty
 
     else if ((type >= JMP && type <= JNE) || type == CALL) {
         commands[ip++] = type;
+        printf("type (setArg), then putLabelAddress: [%d]\n", commands[ip-1]);
         putLabelAddress(labels, commands, &ip, inCommands);
 
         return ip;
@@ -333,6 +336,7 @@ static int setArg(FILE *inCommands, int *commands, Label *labels, int ip, int ty
 
     else {
         commands[ip++] = type;
+        printf("type (setArg): [%d]\n", commands[ip-1]);
 
         return ip;
     }
@@ -367,16 +371,22 @@ static int getArgSD(int *commands, char *registerName, int commandType, int argu
         customWarning(NULL != NULL, 1);
     }
 
+    printf("==============GET ARG============\n");
     commands[ip++] = (commandType | IMMED) | REG;
+    printf("commandType | IMMED | REG: [%d]\n", commands[ip - 1]);
     commands[ip++] = argument;
+    printf("argument: [%d]\n", commands[ip - 1]);
     commands[ip++] = registerName[0] - 'A' + 1;
+    printf("first register letter: [%c]\n", commands[ip - 1]);
 
     return ip;
 }
 
 static int getArgD(int *commands, int commandType, int arg, int ip) {
     commands[ip++] = commandType | IMMED;
+    printf("commandType | IMMED (getArgD): [%d]\n", commands[ip-1]);
     commands[ip++] = arg;
+    printf("argument (getArgD): [%d]\n", commands[ip-1]);
 
     return ip;
 }
@@ -392,7 +402,9 @@ static int getArgS(int *commands, char *registerName, int commandType, int ip) {
     }
 
     commands[ip++] = commandType | REG;
+    printf("commandType | REG (getArgS): [%d] | [%d] -> [%d]\n", commandType, REG, commands[ip - 1]);
     commands[ip++] = registerName[0] - 'A' + 1;
+    printf("first register letter: [%d]\n", commands[ip - 1]);
 
     return ip;
 }
@@ -412,12 +424,14 @@ static int setArgPushPop(FILE *inCommands, int *commands, int ip, int type) {
         }
 
         commands[commandIp] |= type;
+        printf("|= type (setArgPushPop): [%d]", commands[commandIp]);
 
         return ip;
     }
 
     ip = getArg(inputLine, commands, ip);
     commands[commandIp] |= type;
+    printf("|= type (setArgPushPop) if no [: type = [%d], [%d]\n", type, commands[commandIp]);
 
     return ip;
 }
