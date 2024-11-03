@@ -10,7 +10,7 @@
 
 int main(int argc, const char *argv[]) {
   // TODO fileName
-  const char *fileName = "../../build/SPU_code.txt";
+  const char *fileName = "build/SPU_code.txt";
   // const char *outputFileName = "dasm_code.txt";
 
   textData text = {};
