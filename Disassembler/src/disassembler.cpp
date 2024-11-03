@@ -47,6 +47,9 @@ int main(int argc, const char *argv[]) {
   // TODO ЧЕ ДЕЛАТЬ С ИНИЦИАЛИЗАЦИЕЙ МЕТОК? ПРЫЖКИ И CALL ОТРАБАТЫВАЮТ НОРМАЛЬНО, НО НЕ ПОНЯТНО ГДЕ ЭТА МЕТКА ОПИСЫВАЕТСЯ
   // TODO МБ ПОПРОБОВАТЬ СОХРАНЯТЬ АДРЕСА МЕТОК В АССЕМБЛЕРНЫЙ ФАЙЛ А В ПРОЦЕ ИХ УБИРАТЬ
 
+  // TODO switch(case)
+  // TODO MACRO
+  // TODO PRINTF COMMAND BY MACRO #CMD
   while (sscanf(text.lineArray[index].linePointer, "%d", &cmd) && cmd != -2) { // TODO MAGIC
     if (cmd == (PUSH | REG)) {
       index++;
@@ -124,7 +127,7 @@ int main(int argc, const char *argv[]) {
       index++;
       int label = 0;
       sscanf(text.lineArray[index].linePointer, "%d", &label);
-      printf("%d LABEL_%d:\n", cmd, label); // обернуть в макрос, пока что код команды
+      printf("%d LABEL_%d:\n", cmd, label);
     }
 
     else if (cmd == CALL) {
