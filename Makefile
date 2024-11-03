@@ -5,20 +5,23 @@ STACK_SRC          = stack.cpp privateStack.cpp hidePtr.cpp stackDump.cpp stackH
 ASSEMBLY_SRC       = assembler.cpp labels.cpp
 ASSEMBLY_TARGET    = assembler
 
-# DISASSEMBLY_SRC    = disassembler.cpp text_processing.cpp
-# DISASSEMBLY_TARGET = disassmbler
+DISASSEMBLY_SRC    = disassembler.cpp
+DISASSEMBLY_TARGET = disassembler
+
+ONEGIN_SRC         = textStruct.cpp
 
 PROCESSOR_SRC      = processor.cpp
 PROCESSOR_TARGET   = processor
 
 SUBMODULE_SRC      = colorPrint/colorPrint.cpp
 
-BUILD_DIR    = build/
-PROC_SRC_DIR = Processor/src/
-ASM_SRC_DIR  = Assembler/src/
-DASM_SRC_DIR = Disassembler/src/
-STACK_DIR    = Stack/
-CFLAGS       = -I customWarning/ -I colorPrint/ -I Stack/ -I Assembler/include/ -I Processor/include/ -I Disassembler/include/ -I common
+BUILD_DIR      = build/
+PROC_SRC_DIR   = Processor/src/
+ASM_SRC_DIR    = Assembler/src/
+DASM_SRC_DIR   = Disassembler/src/
+ONEGIN_SRC_DIR = myOnegin/
+STACK_DIR      = Stack/
+CFLAGS         = -I customWarning/ -I colorPrint/ -I Stack/ -I Assembler/include/ -I Processor/include/ -I Disassembler/include/ -I common -I myOnegin/
 
 DEFAULT_ASM_SRC      = asmExamples/
 DEFAULT_ASM_FILE     = defaultAsm.asm
@@ -114,10 +117,12 @@ assembler: $(addprefix $(ASM_SRC_DIR), $(ASSEMBLY_SRC))
 disassembler: $(addprefix $(DASM_SRC_DIR), $(DISASSEMBLY_SRC))
 	clear
 	make $(BUILD_DIR)
-	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
-	@printf "$(GREEN_TEXT)$(DISASSEMBLY_TARGET) COMPILED$(DEFAULT_TEXT)\n"
-	@printf "To run a disassemble, write:$(GREEN_TEXT) $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET)) [--input / --output] [file PATH] $(DEFAULT_TEXT)\n"
-	@printf "Do not type any flags to start processor with default settings\n"
+	@$(CXX) $(CFLAGS) $^ $(SUBMODULE_SRC) $(addprefix $(ONEGIN_SRC_DIR), $(ONEGIN_SRC)) -o $(addprefix $(BUILD_DIR), $(DISASSEMBLY_TARGET))
+	@printf "\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n"
+	@printf "DISASSEMBLER COMPILED. $(DEFAULT_BOLD_TEXT)TO RUN A DISASSEMBLER, WRITE: $(GREEN_TEXT)build/disassembler [file-PATH] $(YELLOW_TEXT)(build/disassembler build/SPU_code.txt)\n"
+	@printf "$(GREEN_TEXT)░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\n$(DEFAULT_TEXT)"
+	@printf "$(CYAN_TEXT)♦ HINT: $(DEFAULT_TEXT)do not type any flags to start assembly with default settings\n"
 
 processor: $(addprefix $(PROC_SRC_DIR), $(PROCESSOR_SRC))
 	clear
