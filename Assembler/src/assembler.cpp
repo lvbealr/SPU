@@ -33,6 +33,7 @@ static const size_t MAX_TRASH_BUFFER_SIZE = 100;
     }                                            \
 }
 
+
 // TODO ОЧЕНЬ ПЛОХО
 #define CHECK_IF_COMMANDS_USE_FSTREAM() {        \
     if (customStrcmp(command, "PUSH") &&         \

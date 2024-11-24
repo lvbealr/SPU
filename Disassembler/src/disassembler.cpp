@@ -54,13 +54,13 @@ int main(int argc, const char *argv[]) {
     if (cmd == (PUSH | REG)) {
       index++;
       sscanf(text.lineArray[index].linePointer, "%d", &cmd);
-      printf("PUSH %cX\n", cmd + 'A' - 1); // DO BETTER NO MAGIC
+      printf("PUSH %cX\n", (cmd % ('a' - 'A')) + 'A' - 1); // DO BETTER NO MAGIC
     }
 
     else if (cmd == (POP | REG)) {
       index++;
       sscanf(text.lineArray[index].linePointer, "%d", &cmd);
-      printf("POP %cX\n", cmd + 'A' - 1); // DO BETTER NO MAGIC
+      printf("POP %cX\n", (cmd % ('a' - 'A')) + 'A' - 1); // DO BETTER NO MAGIC
     }
 
     else if (cmd == (PUSH | IMMED)) {
@@ -82,7 +82,7 @@ int main(int argc, const char *argv[]) {
       sscanf(text.lineArray[index].linePointer, "%d", &number);
       index++;
       sscanf(text.lineArray[index].linePointer, "%d", &reg);
-      printf("PUSH [%cX + %d]\n", reg + 'A' - 1, number);
+      printf("PUSH [%cX + %d]\n", (reg % ('a' - 'A')) + 'A' - 1, number);
     }
 
     else if (cmd == ((POP | IMMED) | REG)) {
@@ -92,21 +92,21 @@ int main(int argc, const char *argv[]) {
       sscanf(text.lineArray[index].linePointer, "%d", &number);
       index++;
       sscanf(text.lineArray[index].linePointer, "%d", &reg);
-      printf("POP [%cX + %d]\n", reg + 'A' - 1, number);
+      printf("POP [%cX + %d]\n", (reg % ('a' - 'A')) + 'A' - 1, number);
     }
 
     else if (cmd == ((MEM | REG) | PUSH)) {
       int reg = 0;
       index++;
       sscanf(text.lineArray[index].linePointer, "%d", &reg);
-      printf("PUSH [%cX]\n", reg + 'A' - 1);
+      printf("PUSH [%cX]\n", (reg % ('a' - 'A')) + 'A' - 1);
     }
 
     else if (cmd == ((MEM | REG) | POP)) {
       int reg = 0;
       index++;
       sscanf(text.lineArray[index].linePointer, "%d", &reg);
-      printf("POP [%cX]\n", reg + 'A' - 1);
+      printf("POP [%cX]\n", (reg % ('a' - 'A')) + 'A' - 1);
     }
 
     else if (cmd == ((MEM | IMMED) | PUSH)) {
