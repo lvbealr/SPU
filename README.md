@@ -48,7 +48,7 @@ Once the program is written, it is converted to “machine code” using the Ass
 
 The Processor module emulates the execution of machine code. The machine code is read by the processor, a pointer to the first instruction is set, the processor reads the instructions, decodes them, performs operations, updates registers and memory, and moves to the next instruction.
 
-The Dissembler module allows you to convert machine code back into readable assembler for analysis and debugging.
+The Disassembler module allows you to convert machine code back into readable assembler for analysis and debugging.
 
 ## 🗝 Installation <a name = "installation"></a>
 
