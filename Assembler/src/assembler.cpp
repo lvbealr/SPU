@@ -13,9 +13,7 @@ static const size_t MAX_TRASH_BUFFER_SIZE = 100;
 
 #define CLEAN_INPUT_LINE(stream) {               \
     char trash[MAX_TRASH_BUFFER_SIZE] = {};      \
-    printf("Clean Buffer...\n");                 \
     fscanf(stream, "%[^\r\n]%*1[\r\n]", trash);  \
-    printf("Trash: [%s]\n", trash);              \
     *trash = {};                                 \
 }
 
