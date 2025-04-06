@@ -11,11 +11,11 @@ struct Label {
   char labelName[MAX_LABEL_NAME_SIZE];
   int  initAddress;
   int *jmpAddress;
-  int  jmpUsed; // TODO
+  int  jmpUsed;
   int  jmpCount;
 };
 
-enum LabelErrors { // TODO NUMBERING
+enum LabelErrors {
   EXCEEDED_MAX_LABEL_COUNT = -1,
   DOUBLE_INITIALIZE        =  0,
   NO_LABEL_ERROR           =  1

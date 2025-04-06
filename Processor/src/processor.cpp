@@ -14,14 +14,6 @@ static int push    (Processor *PROCESSOR);
 static int pop     (Processor *PROCESSOR);
 
 static int run() {
-    // TODO STACK FIELD BY MACRO
-    // TODO STACK CREATING
-    // stack *STACK     = createPrivateStack();
-    // stack *RET_STACK = createPrivateStack();
-    // initializePrivateStack(    STACK, __FILE__, __LINE__, __PRETTY_FUNCTION__);
-    // initializePrivateStack(RET_STACK, __FILE__, __LINE__, __PRETTY_FUNCTION__);
-    // TODO WTF IT IS ERROR
-
     stack *STACK     = createPrivateStack();
     initializePrivateStack(    STACK, __FILE__, __LINE__, __PRETTY_FUNCTION__);
     stack *RET_STACK = createPrivateStack();
@@ -34,7 +26,6 @@ static int run() {
                            .registers      = {},
                            .ip             = 0};
 
-    // TODO OPEN FILE BY CONSOLE
     FILE *fp = fopen("build/SPU_code.txt", "r");
     customWarning(fp != NULL, 1);
 
@@ -47,7 +38,7 @@ static int run() {
 
     while (1) {
         int command       = PROCESSOR.commands[PROCESSOR.ip++];
-        int maskedCommand = command & 31; // TODO MAGIC
+        int maskedCommand = command & 31;
         if (command == HLT || command == END_OF_COMMANDS) {
             maskedCommand = HLT;
         }
@@ -62,8 +53,6 @@ static int run() {
 
     PROCESSOR.STACK          = NULL;
     PROCESSOR.RETURN_ADDRESS = NULL;
-
-    // TODO FUCKING MEMORY LEAKS IN STACK
 
     #undef CMD_
 }

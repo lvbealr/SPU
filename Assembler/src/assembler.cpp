@@ -9,8 +9,6 @@
 #include "labels.h"
 #include "customWarning.h"
 
-// TODO ITS DEBUG MACRO AND CONSTANT
-// TODO ON_DEBUG
 static const size_t MAX_TRASH_BUFFER_SIZE = 100;
 
 #define CLEAN_INPUT_LINE(stream) {               \
@@ -34,7 +32,6 @@ static const size_t MAX_TRASH_BUFFER_SIZE = 100;
 }
 
 
-// TODO ОЧЕНЬ ПЛОХО
 #define CHECK_IF_COMMANDS_USE_FSTREAM() {        \
     if (customStrcmp(command, "PUSH") &&         \
         customStrcmp(command, "POP" ) &&         \
@@ -51,7 +48,7 @@ static const size_t MAX_TRASH_BUFFER_SIZE = 100;
     }                                            \
 }
 
-typedef int valueType; // TODO NOT USED
+typedef int valueType;
 
 static       int   customStrcmp      (char *firstString, char *secondString);
 static const char *parseConsole      (int argc, char *argv[]);
@@ -174,19 +171,13 @@ static void initializeCommands(int commands[], const char *asmFileName) {
         }
 
     while (1) {
-        printf("===========================================\n"); // ! DEBUG
-
         char newCommand [MAX_CMD_SIZE] = {};
 
         if (fscanf(inCommands, "%s", command) == EOF) {
             break;
         }
 
-        printf("Read Command: [%s]\n", command);
-
         if (!isalpha(*command)) {
-            printf("Command Doesn't Start With A Letter!\n"); // ! DEBUG
-
             CLEAN_INPUT_LINE(inCommands);
 
             continue;
@@ -196,12 +187,9 @@ static void initializeCommands(int commands[], const char *asmFileName) {
 
         CREATE_CLEAR_COMMAND(newCommand, command);
 
-        printf("New Command After Delete ';': [%s]\n", newCommand); // ! DEBUG
-
         #include "cmd_generator.h"
 
         if (strchr(newCommand, ':') != NULL) {
-            printf("Label: [%s]\n", newCommand); // ! DEBUG
             setLabel(labels, command, ip);
             continue;
         }
@@ -213,7 +201,6 @@ static void initializeCommands(int commands[], const char *asmFileName) {
     #undef CMD_
 
     commands[ip] = END_OF_COMMANDS;
-    printf("END: [%d]\n", commands[ip]);
 
     fclose(inCommands);
 
@@ -221,8 +208,6 @@ static void initializeCommands(int commands[], const char *asmFileName) {
     labelsDestruct (labels);
 }
 
-// TODO BINARY MODE
-// TODO OUTPUT FILE BY CONSOLE
 static void initializeExeFile(int commands[]) {
     FILE *exeCommands = fopen("build/SPU_code.txt", "w");
     customWarning(exeCommands != NULL, (void) 1);
@@ -240,12 +225,10 @@ static void initializeExeFile(int commands[]) {
     fclose(exeCommands);
 }
 
-// TODO MAGIC
 static void goThroughLabels(Label LABELS[], int commands[]) {
     for (int labelIndex = 0; labelIndex < MAX_LABEL_COUNT; labelIndex++) {
         for (int jmpIndex = 0; jmpIndex < LABELS[labelIndex].jmpUsed; jmpIndex++) {
             commands[LABELS[labelIndex].jmpAddress[jmpIndex]] = LABELS[labelIndex].initAddress;
-            printf("Label (goThroughLabels): [%s] || To .txt: [%d]\n", LABELS[labelIndex].labelName, LABELS[labelIndex].initAddress);
 
             if (LABELS[labelIndex].initAddress == -1) {
                 customPrint  (red, bold, bgDefault, "Error: label isn't initialized\n");
@@ -260,17 +243,13 @@ static void putLabelAddress(Label LABELS[], int *commands, int *ip, FILE *inComm
     char newLabelName[MAX_LABEL_NAME_SIZE] = {};
 
     fscanf(inCommands, "%s", labelName);
-    printf("Read Label (putLabelAddress): [%s]\n", labelName);    // ! DEBUG
 
     CREATE_CLEAR_COMMAND(newLabelName, labelName);
-
-    printf("New Label After Delete Trash: [%s]\n", newLabelName); // ! DEBUG
 
     int labelAddress  = findLabelAddress(LABELS, newLabelName, *ip);
 
     CLEAN_INPUT_LINE(inCommands);
     commands[(*ip)++] = labelAddress;
-    printf("Label (putLabelAddress): [%s], to .txt: [%d]\n", labelName, commands[(*ip)-1]);
 }
 
 static int isRegister(const char *string) {
@@ -298,24 +277,19 @@ static int getArg(const char *inputLine, int commands[], int ip) {
 
     if (sscanf(inputLine, "%s + %d", registerName, &arg) == 2 ||
         sscanf(inputLine, "%d + %s", &arg, registerName) == 2) {
-            printf("Argument Is [<REG> + <DIGIT>]: [%s + %d]\n", registerName, arg); // TODO FIX [%d + %s]
-
             return getArgSD(commands, registerName, commandType, arg, ip);
         }
 
     if (sscanf(inputLine, "%d", &arg) == 1) {
-        printf("Argument Is Digit (getArg): [%d]\n", arg);
         return getArgD(commands, commandType, arg, ip);
     }
 
     if (sscanf(inputLine, "%s", registerName) == 1) {
-        printf("Argument Is Register (getArg): [%s]\n", registerName);
 
         char newRegisterName[MAX_REGISTER_SIZE] = {};
 
         CREATE_CLEAR_COMMAND(newRegisterName, registerName);
 
-        printf("New Register After Delete Trash: [%s]\n", newRegisterName);
         return getArgS(commands, newRegisterName, commandType, ip);
     }
 
@@ -329,7 +303,6 @@ static int setArg(FILE *inCommands, int *commands, Label *labels, int ip, int ty
 
     else if ((type >= JMP && type <= JNE) || type == CALL) {
         commands[ip++] = type;
-        printf("type (setArg), then putLabelAddress: [%d]\n", commands[ip-1]);
         putLabelAddress(labels, commands, &ip, inCommands);
 
         return ip;
@@ -337,7 +310,6 @@ static int setArg(FILE *inCommands, int *commands, Label *labels, int ip, int ty
 
     else {
         commands[ip++] = type;
-        printf("type (setArg): [%d]\n", commands[ip-1]);
 
         return ip;
     }
@@ -372,22 +344,16 @@ static int getArgSD(int *commands, char *registerName, int commandType, int argu
         customWarning(NULL != NULL, 1);
     }
 
-    printf("==============GET ARG============\n");
     commands[ip++] = (commandType | IMMED) | REG;
-    printf("commandType | IMMED | REG: [%d]\n", commands[ip - 1]);
     commands[ip++] = argument;
-    printf("argument: [%d]\n", commands[ip - 1]);
     commands[ip++] = registerName[0] - 'A' + 1;
-    printf("first register letter: [%c]\n", commands[ip - 1]);
 
     return ip;
 }
 
 static int getArgD(int *commands, int commandType, int arg, int ip) {
     commands[ip++] = commandType | IMMED;
-    printf("commandType | IMMED (getArgD): [%d]\n", commands[ip-1]);
     commands[ip++] = arg;
-    printf("argument (getArgD): [%d]\n", commands[ip-1]);
 
     return ip;
 }
@@ -403,16 +369,14 @@ static int getArgS(int *commands, char *registerName, int commandType, int ip) {
     }
 
     commands[ip++] = commandType | REG;
-    printf("commandType | REG (getArgS): [%d] | [%d] -> [%d]\n", commandType, REG, commands[ip - 1]);
     commands[ip++] = registerName[0] - 'A' + 1;
-    printf("first register letter: [%d]\n", commands[ip - 1]);
 
     return ip;
 }
 
 static int setArgPushPop(FILE *inCommands, int *commands, int ip, int type) {
     int  commandIp     = ip;
-    char inputLine[30] = {}; // TODO MAGIC
+    char inputLine[30] = {};
 
     fscanf(inCommands, "%[^\n]\n", inputLine);
 
@@ -425,14 +389,12 @@ static int setArgPushPop(FILE *inCommands, int *commands, int ip, int type) {
         }
 
         commands[commandIp] |= type;
-        printf("|= type (setArgPushPop): [%d]", commands[commandIp]);
 
         return ip;
     }
 
     ip = getArg(inputLine, commands, ip);
     commands[commandIp] |= type;
-    printf("|= type (setArgPushPop) if no [: type = [%d], [%d]\n", type, commands[commandIp]);
 
     return ip;
 }

@@ -21,7 +21,7 @@ ASM_SRC_DIR    = Assembler/src/
 DASM_SRC_DIR   = Disassembler/src/
 ONEGIN_SRC_DIR = myOnegin/
 STACK_DIR      = Stack/
-CFLAGS         = -I customWarning/ -I colorPrint/ -I Stack/ -I Assembler/include/ -I Processor/include/ -I Disassembler/include/ -I common -I myOnegin/
+CFLAGS         = -I customWarning/ -I colorPrint/ -I Stack/ -I Assembler/include/ -I Processor/include/ -I Disassembler/include/ -I common -I myOnegin/ -D _NDEBUG
 
 DEFAULT_ASM_SRC      = asmExamples/
 DEFAULT_ASM_FILE     = defaultAsm.asm
@@ -39,7 +39,7 @@ CYAN_TEXT         = \033[1;36m
 DEFAULT_BOLD_TEXT = \033[1;37m
 DEFAULT_TEXT 			= \033[0m
 
-DED_FLAGS    = -D _DEBUG -ggdb2 -std=c++17 -O0 -Wall -Wextra -Weffc++                                     \
+DED_FLAGS    = -D -ggdb2 -std=c++17 -O0 -Wall -Wextra -Weffc++                                     \
 			    	   -Waggressive-loop-optimizations -Wc++14-compat -Wmissing-declarations                      \
 				       -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported                       \
 				       -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral            \
