@@ -33,16 +33,16 @@ static const size_t MAX_TRASH_BUFFER_SIZE = 100;
 
 
 #define CHECK_IF_COMMANDS_USE_FSTREAM() {        \
-    if (customStrcmp(command, "PUSH") &&         \
-        customStrcmp(command, "POP" ) &&         \
-        customStrcmp(command, "CALL") &&         \
-        customStrcmp(command, "JA"  ) &&         \
-        customStrcmp(command, "JAE" ) &&         \
-        customStrcmp(command, "JB"  ) &&         \
-        customStrcmp(command, "JBE" ) &&         \
-        customStrcmp(command, "JE"  ) &&         \
-        customStrcmp(command, "JNE" ) &&         \
-        customStrcmp(command, "JMP" )) {         \
+    if (customStrcmp(command, (char *)"PUSH") && \
+        customStrcmp(command, (char *)"POP" ) && \
+        customStrcmp(command, (char *)"CALL") && \
+        customStrcmp(command, (char *)"JA"  ) && \
+        customStrcmp(command, (char *)"JAE" ) && \
+        customStrcmp(command, (char *)"JB"  ) && \
+        customStrcmp(command, (char *)"JBE" ) && \
+        customStrcmp(command, (char *)"JE"  ) && \
+        customStrcmp(command, (char *)"JNE" ) && \
+        customStrcmp(command, (char *)"JMP" )) { \
                                                  \
         CLEAN_INPUT_LINE(inCommands);            \
     }                                            \
@@ -128,7 +128,7 @@ static int customStrcmp(char *firstString, char *secondString) {
 
     FREE_();
 
-    #undef FREE_()
+    #undef FREE_
 
     return asciiDiff;
 }
@@ -165,7 +165,7 @@ static void initializeCommands(int commands[], const char *asmFileName) {
     labelsInitialize(labels);
 
     #define CMD_(name, cmdCode, ...)                                 \
-        if (customStrcmp(newCommand, #name) == 0) {                  \
+        if (customStrcmp(newCommand, (char *)#name) == 0) {          \
             ip = setArg(inCommands, commands, labels, ip, name);     \
             continue;                                                \
         }
@@ -253,12 +253,12 @@ static void putLabelAddress(Label LABELS[], int *commands, int *ip, FILE *inComm
 }
 
 static int isRegister(const char *string) {
-    if ((customStrcmp((char *)string, "AX")) == 0 ||
-        (customStrcmp((char *)string, "BX")) == 0 ||
-        (customStrcmp((char *)string, "CX")) == 0 ||
-        (customStrcmp((char *)string, "DX")) == 0 ||
-        (customStrcmp((char *)string, "EX")) == 0 ||
-        (customStrcmp((char *)string, "FX")) == 0) {
+    if ((customStrcmp((char *)string, (char *)"AX")) == 0 ||
+        (customStrcmp((char *)string, (char *)"BX")) == 0 ||
+        (customStrcmp((char *)string, (char *)"CX")) == 0 ||
+        (customStrcmp((char *)string, (char *)"DX")) == 0 ||
+        (customStrcmp((char *)string, (char *)"EX")) == 0 ||
+        (customStrcmp((char *)string, (char *)"FX")) == 0) {
             return 1;
         }
 
